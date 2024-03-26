@@ -2,13 +2,17 @@ const express = require('express')
 const app = express()
 const port = 4000
 const cors = require('cors')
-
-//POcLnKNdqF7RBXGn pass
-//bookstreet id
+const logger = require('./logger');
 
 //middleware
 app.use(cors())
 app.use(express.json())
+
+// Logger middleware
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+});
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -16,7 +20,7 @@ app.get('/', (req, res) => {
 
 //mongodb config
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://bookstreet:POcLnKNdqF7RBXGn@cluster0.7t6fl3g.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -38,23 +42,33 @@ async function run() {
 
     // insert data using post
     app.post("/uploadBook", async(req,res)=>{
+      try{
         const data = req.body;
         const result = await bookCollection.insertOne(data);
         res.send(result)
+    }catch(error){
+      res.status(500).json({ error: 'Internal server error' });
+    }
     })
 
     // get all books & find by a category from db
-    app.get("/all-books", async (req, res) => {
+    app.get("/allBooks", async (req, res) => {
+      try{
       let query = {};
       if (req.query?.category) {
           query = { category: req.query.category }
       }
-      const result = await bookCollections.find(query).toArray();
+      const result = await bookCollection.find(query).toArray();
       res.send(result)
-    })
+    }catch(error){
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    }
+    )
 
     // update a books method
     app.patch("/book/:id", async (req, res) => {
+      try{
       const id = req.params.id;
       // console.log(id);
       const updateBookData = req.body;
@@ -67,24 +81,35 @@ async function run() {
       const options = { upsert: true };
 
       // update now
-      const result = await bookCollections.updateOne(filter, updatedDoc, options);
+      const result = await bookCollection.updateOne(filter, updatedDoc, options);
       res.send(result);
+    }catch(error){
+      res.status(500).json({ error: 'Internal server error' });
+    }
     })
 
      // delete a item from db
      app.delete("/book/:id", async (req, res) => {
+      try{
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
-      const result = await bookCollections.deleteOne(filter);
+      const result = await bookCollection.deleteOne(filter);
       res.send(result);
+    }catch(error){
+      res.status(500).json({ error: 'Internal server error' });
+    }
     })
 
     // get a single book data
     app.get("/book/:id", async (req, res) => {
+      try{
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
-      const result = await bookCollections.findOne(filter);
+      const result = await bookCollection.findOne(filter);
       res.send(result)
+      }catch(error){
+        res.status(500).json({ error: 'Internal server error' });
+      }
     })
     
 

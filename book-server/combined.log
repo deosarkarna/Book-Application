@@ -37,3 +37,7 @@
 {"level":"info","message":"GET /book/65fdd5e3b7e5691cbd1fef35","timestamp":"2024-03-26T17:37:02.928Z"}
 {"level":"info","message":"POST /uploadBook","timestamp":"2024-03-26T19:59:17.838Z"}
 {"level":"info","message":"GET /allBooks","timestamp":"2024-03-26T19:59:31.304Z"}
+{"level":"info","message":"GET /allBooks","timestamp":"2024-03-26T20:27:04.223Z"}
+{"level":"info","message":"GET /allBooks","timestamp":"2024-03-26T20:27:04.269Z"}
+{"level":"info","message":"GET /allBooks","timestamp":"2024-03-26T20:27:16.365Z"}
+{"level":"info","message":"GET /allBooks","timestamp":"2024-03-26T20:27:16.404Z"}
